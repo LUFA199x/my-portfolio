@@ -7,7 +7,7 @@ import slugify from 'slugify';
 
 // PUBLIC: Fetch all published projects
 export async function getPublishedProjects(): Promise<Project[]> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
     .select('*, service:services(id, name, slug)')
@@ -20,7 +20,7 @@ export async function getPublishedProjects(): Promise<Project[]> {
 
 // PUBLIC: Fetch featured projects for home page
 export async function getFeaturedProjects(): Promise<Project[]> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
     .select('*, service:services(id, name, slug)')
@@ -35,7 +35,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
 
 // PUBLIC: Fetch single project by slug
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
     .select('*, service:services(id, name, slug)')
