@@ -22,15 +22,30 @@ export default function WorkGrid({ projects, showHeading = true, limit }: Props)
     <section ref={ref} className="py-16 md:py-24 px-6 md:px-10 border-t border-[#1e1d1b]">
       <div className="max-w-7xl mx-auto">
         {showHeading && (
-          <div className="flex items-end justify-between mb-12">
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-              className="font-display text-[clamp(2.5rem,6vw,5rem)] text-[#f5f0eb] leading-none"
-            >
-              #MY <span className="text-[#c8b89a]">WORK</span>
-            </motion.h2>
+          <div className="flex items-end justify-between mb-14">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5 }}
+                className="flex items-center gap-3 mb-5"
+              >
+                <span className="inline-block w-5 h-px bg-[#2e2d2b]" />
+                <span className="font-mono-custom text-[10px] text-[#3a3835] tracking-[0.3em] uppercase">
+                  Selected Work
+                </span>
+              </motion.div>
+              <div className="overflow-hidden">
+                <motion.h2
+                  initial={{ y: '100%' }}
+                  animate={isInView ? { y: '0%' } : {}}
+                  transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+                  className="font-display text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] text-[#f5f0eb]"
+                >
+                  THE <span className="text-[#c8b89a]">WORK.</span>
+                </motion.h2>
+              </div>
+            </div>
 
             <motion.div
               initial={{ opacity: 0 }}
@@ -39,16 +54,17 @@ export default function WorkGrid({ projects, showHeading = true, limit }: Props)
             >
               <Link
                 href="/projects"
-                className="font-mono-custom text-xs text-[#9a9590] hover:text-[#f5f0eb] tracking-[0.2em] uppercase transition-colors"
+                className="font-mono-custom text-[10px] text-[#6b6763] hover:text-[#f5f0eb] tracking-[0.2em] uppercase transition-colors flex items-center gap-2"
               >
-                View All →
+                View Archive
+                <span className="inline-block">→</span>
               </Link>
             </motion.div>
           </div>
         )}
 
-        {/* Masonry-style grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+        {/* Masonry grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3">
           {displayed.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} isInView={isInView} />
           ))}
@@ -58,15 +74,15 @@ export default function WorkGrid({ projects, showHeading = true, limit }: Props)
           <motion.div
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.6 }}
-            className="text-center mt-12"
+            transition={{ delay: 0.7 }}
+            className="text-center mt-14"
           >
             <Link
               href="/projects"
-              className="inline-flex items-center gap-3 border border-[#3a3835] px-8 py-3.5 rounded-full text-[#f5f0eb] text-sm font-mono-custom tracking-wider uppercase hover:border-[#c8b89a] hover:text-[#c8b89a] transition-all duration-300"
+              className="group inline-flex items-center gap-3 border border-[#2a2927] hover:border-[#c8b89a] px-9 py-4 rounded-full text-[#9a9590] hover:text-[#c8b89a] text-xs font-mono-custom tracking-[0.18em] uppercase transition-all duration-300"
             >
-              See All Work
-              <span>→</span>
+              See Full Archive
+              <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
             </Link>
           </motion.div>
         )}
@@ -74,8 +90,6 @@ export default function WorkGrid({ projects, showHeading = true, limit }: Props)
     </section>
   );
 }
-
-// ─── Individual Project Card ───────────────────────────────────────────────────
 
 function ProjectCard({
   project,
@@ -88,19 +102,16 @@ function ProjectCard({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Vary aspect ratio for masonry feel
   const aspectVariants = ['aspect-[3/4]', 'aspect-square', 'aspect-[3/4]', 'aspect-[4/5]'];
   const aspect = aspectVariants[index % 4];
-
-  // Some cards span 2 rows on larger screens for visual rhythm
   const isTall = index % 5 === 1 || index % 5 === 4;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{
-        duration: 0.7,
+        duration: 0.75,
         ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
         delay: 0.04 * index,
       }}
@@ -108,45 +119,43 @@ function ProjectCard({
     >
       <Link
         href={`/projects/${project.slug}`}
-        className={`block relative overflow-hidden rounded-xl ${isTall ? 'aspect-[3/5]' : aspect} group`}
+        className={`block relative overflow-hidden rounded-xl ${isTall ? 'aspect-[3/5]' : aspect}`}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         data-cursor="hover"
       >
-        {/* Image */}
         <Image
           src={project.cover_image}
           alt={project.title}
           fill
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{ transform: hovered ? 'scale(1.06)' : 'scale(1)' }}
           sizes="(max-width: 768px) 50vw, 25vw"
           unoptimized
         />
 
-        {/* Dark overlay on hover */}
-        <motion.div
-          animate={{ opacity: hovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-          className="absolute inset-0 bg-[#0a0a0a]/60"
+        {/* Gradient overlay */}
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/75 via-transparent to-transparent transition-opacity duration-300"
+          style={{ opacity: hovered ? 1 : 0 }}
         />
 
-        {/* Info reveal */}
-        <motion.div
-          animate={{ y: hovered ? 0 : 12, opacity: hovered ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-          className="absolute bottom-0 left-0 right-0 p-4"
+        {/* Info */}
+        <div
+          className="absolute bottom-0 left-0 right-0 p-3.5 transition-all duration-300"
+          style={{ transform: hovered ? 'translateY(0)' : 'translateY(8px)', opacity: hovered ? 1 : 0 }}
         >
-          <p className="font-mono-custom text-[9px] text-[#c8b89a] tracking-widest uppercase mb-1">
+          <p className="font-mono-custom text-[8px] text-[#c8b89a] tracking-widest uppercase mb-1">
             {project.service?.name ?? 'Photography'}
           </p>
-          <h3 className="text-[#f5f0eb] text-sm font-medium leading-tight">
+          <h3 className="text-[#f5f0eb] text-xs font-medium leading-snug">
             {project.title}
           </h3>
-        </motion.div>
+        </div>
 
         {/* Featured badge */}
         {project.is_featured && (
-          <div className="absolute top-3 right-3 bg-[#c8b89a] text-[#0a0a0a] text-[8px] font-mono-custom tracking-widest uppercase px-2 py-1 rounded-full">
+          <div className="absolute top-2.5 right-2.5 bg-[#c8b89a] text-[#0a0a0a] text-[7px] font-mono-custom tracking-widest uppercase px-2 py-1 rounded-full">
             Featured
           </div>
         )}

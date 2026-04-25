@@ -4,11 +4,17 @@
 
 :root {
   --black: #0a0a0a;
+  --black-2: #0d0d0c;
+  --black-3: #111110;
   --white: #f5f0eb;
   --cream: #ede8e1;
   --accent: #c8b89a;
+  --accent-dim: rgba(200, 184, 154, 0.12);
+  --accent-border: rgba(200, 184, 154, 0.25);
   --muted: #3a3835;
+  --muted-2: #5a5653;
   --border: #1e1d1b;
+  --border-2: #272523;
   --font-display: 'Bebas Neue', sans-serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
@@ -17,8 +23,8 @@
 @theme inline {
   --color-background: var(--black);
   --color-foreground: var(--white);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
 * {
@@ -38,12 +44,13 @@ body {
   font-family: var(--font-body);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom cursor */
+/* ─── Custom Cursor ────────────────────────────────────────────── */
 .cursor {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   background: var(--white);
   border-radius: 50%;
   position: fixed;
@@ -52,14 +59,14 @@ body {
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: difference;
-  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
+  transition: transform 0.15s ease, width 0.25s ease, height 0.25s ease;
   transform: translate(-50%, -50%);
 }
 
 .cursor-ring {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(245, 240, 235, 0.4);
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(245, 240, 235, 0.35);
   border-radius: 50%;
   position: fixed;
   top: 0;
@@ -67,33 +74,38 @@ body {
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%);
-  transition: all 0.08s linear;
+  transition: all 0.1s linear;
 }
 
 .cursor-ring.hovering {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   border-color: var(--accent);
+  border-width: 1.5px;
 }
 
-/* Selection */
+/* ─── Selection ────────────────────────────────────────────────── */
 ::selection {
   background: var(--accent);
   color: var(--black);
 }
 
-/* Scrollbar */
+/* ─── Scrollbar ────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 2px;
 }
 ::-webkit-scrollbar-track {
   background: var(--black);
 }
 ::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
 }
 
-/* Utility classes */
+/* ─── Utility classes ──────────────────────────────────────────── */
 .font-display {
   font-family: var(--font-display);
 }
@@ -101,7 +113,7 @@ body {
   font-family: var(--font-mono);
 }
 
-/* Grain overlay */
+/* ─── Grain overlay ────────────────────────────────────────────── */
 .grain::after {
   content: '';
   position: fixed;
@@ -109,7 +121,7 @@ body {
   width: 400%;
   height: 400%;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.03;
+  opacity: 0.025;
   pointer-events: none;
   z-index: 9990;
   animation: grain 8s steps(10) infinite;
@@ -128,20 +140,86 @@ body {
   90% { transform: translate(-10%, 10%); }
 }
 
-/* Marquee */
+/* ─── Marquee ──────────────────────────────────────────────────── */
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
-.animate-marquee {
-  animation: marquee 20s linear infinite;
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
-.animate-marquee:hover {
+.animate-marquee {
+  animation: marquee 24s linear infinite;
+}
+.animate-marquee-slow {
+  animation: marquee 36s linear infinite;
+}
+.animate-marquee:hover,
+.animate-marquee-slow:hover {
   animation-play-state: paused;
 }
+.animate-marquee-reverse {
+  animation: marquee-reverse 30s linear infinite;
+}
 
-/* Image reveal */
+/* ─── Image reveal ─────────────────────────────────────────────── */
 @keyframes revealUp {
   from { clip-path: inset(100% 0 0 0); }
   to { clip-path: inset(0% 0 0 0); }
+}
+
+/* ─── Float animation for decorative elements ──────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ─── Pulse ring ───────────────────────────────────────────────── */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ─── Line draw ────────────────────────────────────────────────── */
+@keyframes line-draw {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* ─── Section label pill ───────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--muted);
+}
+
+/* ─── Admin focus ring ─────────────────────────────────────────── */
+.admin-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+/* ─── Smooth image loading ─────────────────────────────────────── */
+img {
+  transition: opacity 0.3s ease;
 }
