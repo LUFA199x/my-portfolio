@@ -9,6 +9,7 @@ const links = [
   { href: '/admin/projects', label: 'Projects', icon: '◈' },
   { href: '/admin/invoices', label: 'Invoices', icon: '◇' },
   { href: '/admin/clients', label: 'Clients', icon: '○' },
+  { href: '/admin/services', label: 'Services', icon: '◑' },
 ];
 
 export default function AdminSidebar() {

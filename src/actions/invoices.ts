@@ -84,7 +84,7 @@ export async function createInvoice(payload: {
 
   if (error) return { error: error.message };
 
-  revalidatePath('/(admin)/admin/invoices');
+  revalidatePath('/admin/invoices');
   return { invoice: data };
 }
 
@@ -96,6 +96,18 @@ export async function markInvoicePaid(id: string): Promise<{ error?: string }> {
     .eq('id', id);
 
   if (error) return { error: error.message };
-  revalidatePath('/(admin)/admin/invoices');
+  revalidatePath('/admin/invoices');
+  return {};
+}
+
+export async function cancelInvoice(id: string): Promise<{ error?: string }> {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from('invoices')
+    .update({ status: 'cancelled' })
+    .eq('id', id);
+
+  if (error) return { error: error.message };
+  revalidatePath('/admin/invoices');
   return {};
 }

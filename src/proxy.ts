@@ -1,24 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 
-const ADMIN_PATHS = ['/admin'];
 const LOGIN_PATH = '/admin/login';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only protect /admin routes (except the login page itself)
-  const isAdminRoute = ADMIN_PATHS.some(p => pathname.startsWith(p));
   const isLoginPage = pathname === LOGIN_PATH;
+  if (isLoginPage) return NextResponse.next();
 
-  if (!isAdminRoute || isLoginPage) {
-    return NextResponse.next();
-  }
-
-  // Validate session
-  const session = await auth.api.getSession({
-    headers: request.headers,
-  });
+  const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
     const loginUrl = new URL(LOGIN_PATH, request.url);

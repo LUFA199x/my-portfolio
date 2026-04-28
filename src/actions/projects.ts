@@ -47,6 +47,16 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   return data;
 }
 
+// BUILD-TIME: Fetch slugs without cookies (for generateStaticParams)
+export async function getPublishedProjectSlugs(): Promise<string[]> {
+  const supabase = createSupabaseAdminClient();
+  const { data } = await supabase
+    .from('projects')
+    .select('slug')
+    .eq('is_published', true);
+  return (data ?? []).map((p: { slug: string }) => p.slug);
+}
+
 // ADMIN: Fetch all projects (including drafts)
 export async function getAllProjects(): Promise<Project[]> {
   const supabase = createSupabaseAdminClient();
@@ -93,7 +103,26 @@ export async function createProject(formData: FormData): Promise<{ error?: strin
 
   revalidatePath('/');
   revalidatePath('/projects');
-  revalidatePath('/(admin)/admin/projects');
+  revalidatePath('/admin/projects');
+  return {};
+}
+
+// ADMIN: Update project fields
+export async function updateProject(
+  id: string,
+  updates: { is_published?: boolean; is_featured?: boolean }
+): Promise<{ error?: string }> {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from('projects')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath('/');
+  revalidatePath('/projects');
+  revalidatePath('/admin/projects');
   return {};
 }
 
@@ -106,5 +135,6 @@ export async function deleteProject(id: string): Promise<{ error?: string }> {
 
   revalidatePath('/');
   revalidatePath('/projects');
+  revalidatePath('/admin/projects');
   return {};
 }

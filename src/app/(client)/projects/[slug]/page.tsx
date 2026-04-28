@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getProjectBySlug, getPublishedProjects } from '@/actions/projects';
+import { getProjectBySlug, getPublishedProjectSlugs } from '@/actions/projects';
 import ProjectGallery from './ProjectGallery';
 
 interface Props {
@@ -8,8 +8,8 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const projects = await getPublishedProjects();
-  return projects.map((p) => ({ slug: p.slug }));
+  const slugs = await getPublishedProjectSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
