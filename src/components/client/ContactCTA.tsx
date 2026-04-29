@@ -60,7 +60,7 @@ export default function ContactCTA() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <a
-            href="mailto:adegheosa@email.com"
+            href="mailto:bookarhday@gmail.com"
             className="group inline-flex items-center gap-3 bg-[#f5f0eb] text-[#0a0a0a] px-8 py-4 rounded-full text-sm font-medium tracking-wide hover:bg-[#c8b89a] transition-colors duration-300"
           >
             Email Me

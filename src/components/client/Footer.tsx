@@ -22,7 +22,7 @@ export default function Footer() {
             Instagram
           </a>
           <a
-            href="mailto:adegheosa@email.com"
+            href="mailto:bookarhday@gmail.com"
             className="font-mono-custom text-[10px] text-[#3a3835] hover:text-[#f5f0eb] tracking-widest uppercase transition-colors"
           >
             Email

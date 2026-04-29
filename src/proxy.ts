@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
 
 const LOGIN_PATH = '/admin/login';
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isLoginPage = pathname === LOGIN_PATH;
-  if (isLoginPage) return NextResponse.next();
+  if (pathname === LOGIN_PATH) return NextResponse.next();
 
-  const session = await auth.api.getSession({ headers: request.headers });
+  // Edge-compatible session check — full validation happens in the admin layout
+  const sessionCookie =
+    request.cookies.get('better-auth.session_token') ??
+    request.cookies.get('__Secure-better-auth.session_token');
 
-  if (!session) {
+  if (!sessionCookie) {
     const loginUrl = new URL(LOGIN_PATH, request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
