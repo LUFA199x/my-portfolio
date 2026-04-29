@@ -1,1 +1,13 @@
 node_modules
+
+# local environment files
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# local build output
+.next/
+backend/dist/
