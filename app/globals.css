@@ -1,0 +1,392 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --orange: #E84C0D;
+  --orange-dark: #C73D08;
+  --black: #0a0a0a;
+  --card: #141414;
+  --border: #1f1f1f;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-outfit: 'Outfit', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--black);
+  color: white;
+  font-family: var(--font-outfit);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--orange);
+  border-radius: 2px;
+}
+
+/* Selection color */
+::selection {
+  background: var(--orange);
+  color: white;
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+
+.font-display {
+  font-family: var(--font-playfair);
+}
+
+.text-orange {
+  color: var(--orange);
+}
+
+.bg-orange {
+  background-color: var(--orange);
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(var(--rotate, 0deg)); }
+  50% { transform: translateY(-8px) rotate(var(--rotate, 0deg)); }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.6s ease forwards;
+}
+
+/* Intersection observer animation classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger delays */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
+.delay-6 { transition-delay: 0.6s; }
+.delay-7 { transition-delay: 0.7s; }
+.delay-8 { transition-delay: 0.8s; }
+
+/* ==================== HERO COLLAGE ==================== */
+
+.collage-container {
+  position: relative;
+  width: 100%;
+  min-height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collage-item {
+  position: absolute;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+/* ==================== SERVICES 3D ==================== */
+
+.services-card {
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.services-card:hover {
+  transform: perspective(1000px) rotateY(-5deg) rotateX(2deg) translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.services-card.active {
+  transform: perspective(1000px) rotateY(-2deg) rotateX(1deg) translateY(-12px);
+  border-color: var(--orange) !important;
+}
+
+/* ==================== TESTIMONIALS ==================== */
+
+.testimonial-card {
+  background: #141414;
+  border: 1px solid #1f1f1f;
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+  border-color: #333;
+  transform: translateY(-4px);
+}
+
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #1f1f1f;
+  border-radius: 100px;
+  border: none;
+  color: #888;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-outfit);
+}
+
+.like-btn:hover {
+  background: #2a2a2a;
+  color: white;
+}
+
+.like-btn.liked {
+  color: var(--orange);
+}
+
+/* ==================== NAVBAR ==================== */
+
+.nav-link {
+  position: relative;
+  color: #999;
+  transition: color 0.3s ease;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--orange);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  color: var(--orange);
+}
+
+/* ==================== CTA ==================== */
+
+.cta-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  outline: none;
+  color: #1a1a1a;
+  font-size: 15px;
+  padding: 12px 0;
+  width: 100%;
+  font-family: var(--font-outfit);
+}
+
+.cta-input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* ==================== CONTACT FORM ==================== */
+
+.form-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #333;
+  outline: none;
+  color: white;
+  font-size: 15px;
+  padding: 12px 0;
+  width: 100%;
+  font-family: var(--font-outfit);
+  transition: border-color 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: #555;
+}
+
+.form-input:focus {
+  border-bottom-color: var(--orange);
+}
+
+.form-select {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #333;
+  outline: none;
+  color: #555;
+  font-size: 15px;
+  padding: 12px 0;
+  width: 100%;
+  font-family: var(--font-outfit);
+  cursor: pointer;
+  -webkit-appearance: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-select:focus {
+  border-bottom-color: var(--orange);
+  color: white;
+}
+
+.form-select option {
+  background: #1a1a1a;
+  color: white;
+}
+
+/* ==================== WORK GRID ==================== */
+
+.work-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.work-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 20px 24px;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.work-card-details {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.88);
+  backdrop-filter: blur(12px);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(1.02);
+  transition: all 0.35s ease;
+}
+
+.work-card:hover .work-card-details {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ==================== FOOTER ==================== */
+
+.footer-big-text {
+  font-family: var(--font-playfair);
+  font-size: clamp(80px, 15vw, 200px);
+  color: var(--orange);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -4px;
+}

@@ -1,0 +1,219 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum InquiryStatus {
+  PENDING
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+// ─────────────────────────────────────────────────────────
+// AUTHENTICATION
+// ─────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(ADMIN)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions  Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  refreshToken String   @unique
+  ipAddress    String?
+  userAgent    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+// ─────────────────────────────────────────────────────────
+// PORTFOLIO / PROJECTS
+// ─────────────────────────────────────────────────────────
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  category    String   // "Portrait", "Fashion", "Outdoor", etc.
+  year        String
+  summary     String
+  description String?  @db.Text
+  coverImage  String   // Cloudinary URL
+  tags        String[] // ["portrait", "red-light", "studio"]
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images ProjectImage[]
+
+  @@index([published, order])
+  @@index([slug])
+  @@map("projects")
+}
+
+model ProjectImage {
+  id        String  @id @default(cuid())
+  url       String  // Cloudinary URL
+  publicId  String  // Cloudinary public_id for deletion
+  alt       String?
+  width     Int?
+  height    Int?
+  order     Int     @default(0)
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, order])
+  @@map("project_images")
+}
+
+// ─────────────────────────────────────────────────────────
+// TESTIMONIALS
+// ─────────────────────────────────────────────────────────
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  company   String?
+  text      String   @db.Text
+  avatar    String?  // Cloudinary URL
+  likes     Int      @default(0)
+  featured  Boolean  @default(false)
+  published Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  testimonialLikes TestimonialLike[]
+
+  @@index([published, order])
+  @@map("testimonials")
+}
+
+model TestimonialLike {
+  id            String   @id @default(cuid())
+  testimonialId String
+  ipAddress     String
+  fingerprint   String?  // browser fingerprint for better deduplication
+  createdAt     DateTime @default(now())
+
+  testimonial Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+
+  @@unique([testimonialId, ipAddress])
+  @@index([testimonialId])
+  @@map("testimonial_likes")
+}
+
+// ─────────────────────────────────────────────────────────
+// SERVICES
+// ─────────────────────────────────────────────────────────
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  icon        String?  // icon name or SVG string
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active, order])
+  @@map("services")
+}
+
+// ─────────────────────────────────────────────────────────
+// CONTACT / INQUIRIES
+// ─────────────────────────────────────────────────────────
+
+model ContactInquiry {
+  id        String        @id @default(cuid())
+  email     String
+  name      String
+  location  String?
+  message   String        @db.Text
+  status    InquiryStatus @default(PENDING)
+  notes     String?       // admin notes
+  repliedAt DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status, createdAt])
+  @@map("contact_inquiries")
+}
+
+// ─────────────────────────────────────────────────────────
+// EMAIL SUBSCRIBERS
+// ─────────────────────────────────────────────────────────
+
+model Subscriber {
+  id          String           @id @default(cuid())
+  email       String           @unique
+  status      SubscriberStatus @default(ACTIVE)
+  source      String?          // "cta", "footer", "popup"
+  unsubToken  String           @unique @default(cuid())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("subscribers")
+}
+
+// ─────────────────────────────────────────────────────────
+// SITE SETTINGS
+// ─────────────────────────────────────────────────────────
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  type      String   @default("string") // "string" | "json" | "boolean"
+  label     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
