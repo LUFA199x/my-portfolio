@@ -5,71 +5,16 @@ import Image from 'next/image'
 import Footer from '@/components/Footer'
 
 interface Project {
-  id: number
+  id: string
   title: string
+  slug: string
   category: string
   year: string
   summary: string
-  src: string
-  bg: string
+  coverImage: string
+  featured: boolean
+  published: boolean
 }
-
-const projects: Project[] = [
-  {
-    id: 1,
-    title: 'Studio Series',
-    category: 'Portrait · Photography',
-    year: '2024',
-    summary: 'Clean studio work with a focus on natural light and effortless posing. Every frame breathes.',
-    src: 'https://picsum.photos/seed/proj1/600/700',
-    bg: '#d4c4b0',
-  },
-  {
-    id: 2,
-    title: 'Smoke & Silence',
-    category: 'Portrait · B&W',
-    year: '2024',
-    summary: 'Black and white portraiture exploring masculine stillness. Minimal props, maximum presence.',
-    src: 'https://picsum.photos/seed/proj2/600/700',
-    bg: '#1a1a1a',
-  },
-  {
-    id: 3,
-    title: 'Edric — 3 Months',
-    category: 'Family · Lifestyle',
-    year: '2024',
-    summary: 'A milestone milestone session filled with sunflowers, laughter, and that new-baby magic.',
-    src: 'https://picsum.photos/seed/proj3/600/700',
-    bg: '#f5f0e8',
-  },
-  {
-    id: 4,
-    title: 'Soft Morning',
-    category: 'Fashion · Studio',
-    year: '2024',
-    summary: 'An all-white editorial about slowness. We let the light do all the talking.',
-    src: 'https://picsum.photos/seed/proj4/600/700',
-    bg: '#f0f0f0',
-  },
-  {
-    id: 5,
-    title: 'Golden Field',
-    category: 'Outdoor · Lifestyle',
-    year: '2023',
-    summary: 'Chasing golden hour on the edge of Lagos. Grass, sky, and a single figure reading.',
-    src: 'https://picsum.photos/seed/proj5/600/700',
-    bg: '#8ab87a',
-  },
-  {
-    id: 6,
-    title: 'Urban Canopy',
-    category: 'Street · Nature',
-    year: '2023',
-    summary: 'Looking up at Lagos — tree canopies framing architecture in unexpected ways.',
-    src: 'https://picsum.photos/seed/proj6/600/700',
-    bg: '#2a4a2a',
-  },
-]
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [hovered, setHovered] = useState(false)
@@ -106,10 +51,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Image */}
-      <div className="absolute inset-0" style={{ background: project.bg }}>
+      <div className="absolute inset-0 bg-[#1a1a1a]">
         <Image
-          src={project.src}
+          src={project.coverImage}
           alt={project.title}
           fill
           style={{ objectFit: 'cover', transition: 'transform 0.6s ease' }}
@@ -118,7 +62,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         />
       </div>
 
-      {/* Default label */}
       <div
         className="work-card-overlay"
         style={{ opacity: hovered ? 0 : 1, transition: 'opacity 0.3s ease' }}
@@ -126,12 +69,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <p className="text-white text-sm font-medium">See Work.</p>
       </div>
 
-      {/* Hover details */}
       <div className="work-card-details">
         <div className="mb-auto">
-          <p className="text-[var(--orange)] text-xs tracking-widest uppercase mb-3">
-            See Work.
-          </p>
+          <p className="text-[var(--orange)] text-xs tracking-widest uppercase mb-3">See Work.</p>
           <div className="flex justify-between mb-4">
             <div>
               <p className="text-white/40 text-xs mb-1">Category</p>
@@ -159,11 +99,27 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export default function WorkPage() {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const base = process.env.NEXT_PUBLIC_API_URL
+    if (!base) { setLoading(false); return }
+    fetch(`${base}/projects?published=true&limit=50`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.data)) {
+          setProjects(data.data)
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
   return (
     <>
       <div className="min-h-screen bg-[var(--black)] pt-24 md:pt-28">
         <div className="max-w-screen-xl mx-auto px-6 md:px-10">
-          {/* Header */}
           <div className="mb-12 md:mb-16">
             <h1
               className="font-display text-white mb-4"
@@ -178,12 +134,19 @@ export default function WorkPage() {
             </p>
           </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 pb-24">
-            {projects.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-24">
+              <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-[var(--orange)] animate-spin" />
+            </div>
+          ) : projects.length === 0 ? (
+            <p className="text-white/30 py-24 text-center">No projects yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 pb-24">
+              {projects.map((project, i) => (
+                <ProjectCard key={project.id} project={project} index={i} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <Footer />

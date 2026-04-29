@@ -1,97 +1,70 @@
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary'
+import { createClient } from '@supabase/supabase-js'
+import { randomBytes } from 'crypto'
 import { config } from '../../config'
 import { AppError } from '../errors/AppError'
 
-cloudinary.config({
-  cloud_name: config.CLOUDINARY_CLOUD_NAME,
-  api_key: config.CLOUDINARY_API_KEY,
-  api_secret: config.CLOUDINARY_API_SECRET,
-  secure: true,
-})
+const supabase = createClient(config.SUPABASE_URL, config.SUPABASE_SERVICE_ROLE_KEY)
 
 export interface UploadResult {
   url: string
   secureUrl: string
-  publicId: string
-  width: number
-  height: number
+  publicId: string   // storage path within bucket — used for deletion
+  width: number | null
+  height: number | null
   format: string
   bytes: number
 }
 
 // ─────────────────────────────────────────────────────────
-// Upload from buffer (multer memory storage)
+// Upload from buffer (multer memory storage) → Supabase Storage
 // ─────────────────────────────────────────────────────────
 export async function uploadImageBuffer(
   buffer: Buffer,
-  folder = config.CLOUDINARY_UPLOAD_FOLDER,
-  options: {
-    transformation?: object[]
-    tags?: string[]
-    filename?: string
-  } = {}
+  folder = config.SUPABASE_STORAGE_FOLDER,
+  options: { filename?: string; mimetype?: string } = {}
 ): Promise<UploadResult> {
-  return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        folder,
-        resource_type: 'image',
-        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
-        max_bytes: 10 * 1024 * 1024, // 10 MB
-        transformation: options.transformation ?? [
-          { quality: 'auto:good' },
-          { fetch_format: 'auto' },
-        ],
-        tags: options.tags,
-        public_id: options.filename,
-      },
-      (error, result) => {
-        if (error || !result) {
-          reject(new AppError(`Image upload failed: ${error?.message}`, 500))
-          return
-        }
-        resolve(mapUploadResult(result))
-      }
-    )
-    uploadStream.end(buffer)
-  })
+  const mimetype = options.mimetype ?? 'image/jpeg'
+  const ext = mimetype.split('/')[1] ?? 'jpg'
+  const name = options.filename ?? randomBytes(16).toString('hex')
+  const storagePath = `${folder}/${name}.${ext}`
+
+  const { error } = await supabase.storage
+    .from(config.SUPABASE_STORAGE_BUCKET)
+    .upload(storagePath, buffer, { contentType: mimetype, upsert: false })
+
+  if (error) throw new AppError(`Image upload failed: ${error.message}`, 500)
+
+  const { data } = supabase.storage
+    .from(config.SUPABASE_STORAGE_BUCKET)
+    .getPublicUrl(storagePath)
+
+  return {
+    url: data.publicUrl,
+    secureUrl: data.publicUrl,
+    publicId: storagePath,
+    width: null,
+    height: null,
+    format: ext,
+    bytes: buffer.length,
+  }
 }
 
 // ─────────────────────────────────────────────────────────
-// Delete image
+// Delete image by storage path
 // ─────────────────────────────────────────────────────────
 export async function deleteImage(publicId: string): Promise<void> {
-  await cloudinary.uploader.destroy(publicId)
+  const { error } = await supabase.storage
+    .from(config.SUPABASE_STORAGE_BUCKET)
+    .remove([publicId])
+  if (error) throw new AppError(`Image deletion failed: ${error.message}`, 500)
 }
 
 // ─────────────────────────────────────────────────────────
-// Generate optimised URL variants
+// Get public URL for a stored path
 // ─────────────────────────────────────────────────────────
-export function getOptimisedUrl(
-  publicId: string,
-  options: { width?: number; height?: number; quality?: string } = {}
-): string {
-  return cloudinary.url(publicId, {
-    quality: options.quality ?? 'auto:good',
-    fetch_format: 'auto',
-    width: options.width,
-    height: options.height,
-    crop: options.width || options.height ? 'fill' : undefined,
-    secure: true,
-  })
-}
-
-// ─────────────────────────────────────────────────────────
-// Internal helpers
-// ─────────────────────────────────────────────────────────
-function mapUploadResult(result: UploadApiResponse): UploadResult {
-  return {
-    url: result.url,
-    secureUrl: result.secure_url,
-    publicId: result.public_id,
-    width: result.width,
-    height: result.height,
-    format: result.format,
-    bytes: result.bytes,
-  }
+export function getOptimisedUrl(publicId: string): string {
+  const { data } = supabase.storage
+    .from(config.SUPABASE_STORAGE_BUCKET)
+    .getPublicUrl(publicId)
+  return data.publicUrl
 }

@@ -8,14 +8,15 @@ import { BadRequestError, NotFoundError } from '../../shared/errors/AppError'
 import { config } from '../../config'
 
 // ─────────────────────────────────────────────────────────
-// Multer — memory storage (buffer → Cloudinary)
+// Multer — memory storage (buffer → Supabase Storage)
 // ─────────────────────────────────────────────────────────
+const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
   fileFilter(_req, file, cb) {
-    const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
-    if (!allowed.includes(file.mimetype)) {
+    if (!ALLOWED_TYPES.includes(file.mimetype)) {
       cb(new BadRequestError('Only JPEG, PNG, and WebP images are allowed'))
       return
     }
@@ -32,8 +33,8 @@ export const uploadsRouter = Router()
 uploadsRouter.post('/image', authenticate, requireAdmin, upload.single('image'), async (req: Request, res: Response) => {
   if (!req.file) throw new BadRequestError('No image file provided')
 
-  const folder = (req.query.folder as string) || config.CLOUDINARY_UPLOAD_FOLDER
-  const result = await uploadImageBuffer(req.file.buffer, folder)
+  const folder = (req.query.folder as string) || config.SUPABASE_STORAGE_FOLDER
+  const result = await uploadImageBuffer(req.file.buffer, folder, { mimetype: req.file.mimetype })
   sendCreated(res, result, 'Image uploaded')
 })
 
@@ -44,9 +45,7 @@ uploadsRouter.post('/projects/:id/cover', authenticate, requireAdmin, upload.sin
   const project = await prisma.project.findUnique({ where: { id: req.params.id } })
   if (!project) throw new NotFoundError('Project')
 
-  const result = await uploadImageBuffer(req.file.buffer, `${config.CLOUDINARY_UPLOAD_FOLDER}/projects`, {
-    tags: ['project', 'cover'],
-  })
+  const result = await uploadImageBuffer(req.file.buffer, 'projects', { mimetype: req.file.mimetype })
 
   const updated = await prisma.project.update({
     where: { id: req.params.id },
@@ -66,9 +65,7 @@ uploadsRouter.post('/projects/:id/images', authenticate, requireAdmin, upload.ar
 
   const uploaded = await Promise.all(
     files.map((file, i) =>
-      uploadImageBuffer(file.buffer, `${config.CLOUDINARY_UPLOAD_FOLDER}/projects`, {
-        tags: ['project', 'gallery'],
-      }).then((result) =>
+      uploadImageBuffer(file.buffer, 'projects', { mimetype: file.mimetype }).then((result) =>
         prisma.projectImage.create({
           data: {
             projectId: req.params.id,
@@ -103,9 +100,7 @@ uploadsRouter.delete('/images/:imageId', authenticate, requireAdmin, async (req:
 uploadsRouter.post('/testimonials/:id/avatar', authenticate, requireAdmin, upload.single('avatar'), async (req: Request, res: Response) => {
   if (!req.file) throw new BadRequestError('No image file provided')
 
-  const result = await uploadImageBuffer(req.file.buffer, `${config.CLOUDINARY_UPLOAD_FOLDER}/avatars`, {
-    transformation: [{ width: 200, height: 200, crop: 'fill', gravity: 'face' }],
-  })
+  const result = await uploadImageBuffer(req.file.buffer, 'avatars', { mimetype: req.file.mimetype })
 
   const updated = await prisma.testimonial.update({
     where: { id: req.params.id },

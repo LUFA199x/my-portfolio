@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Footer from '@/components/Footer'
 
-const locations = [
+const LOCATIONS = [
   'Lagos, Nigeria',
   'Abuja, Nigeria',
   'Port Harcourt, Nigeria',
@@ -12,41 +12,61 @@ const locations = [
 ]
 
 export default function ContactPage() {
-  const [form, setForm] = useState({
-    email: '',
-    name: '',
-    location: '',
-    message: '',
-  })
+  const [form, setForm] = useState({ email: '', name: '', location: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
+    setError(null)
   }
 
-  const handleSubmit = () => {
-    if (!form.email || !form.name) return
+  const handleSubmit = async () => {
+    if (!form.email || !form.name || !form.message) return
+    if (form.message.length < 10) {
+      setError('Message must be at least 10 characters.')
+      return
+    }
+
     setLoading(true)
-    setTimeout(() => {
+    setError(null)
+
+    const base = process.env.NEXT_PUBLIC_API_URL
+    if (!base) {
       setLoading(false)
-      setSubmitted(true)
-    }, 1200)
+      setError('API URL is not configured.')
+      return
+    }
+
+    try {
+      const res = await fetch(`${base}/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+
+      if (data.success) {
+        setSubmitted(true)
+      } else {
+        const msg = data.error?.details?.[0]?.message ?? data.error?.message ?? 'Something went wrong. Please try again.'
+        setError(msg)
+      }
+    } catch {
+      setError('Could not reach the server. Please try again later.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <>
       <div className="min-h-screen bg-[var(--black)] pt-16 flex flex-col items-center justify-center px-6 md:px-10 py-12">
         <div className="w-full max-w-xl">
-          {/* Contact card with orange border */}
           <div
             className="rounded-2xl p-8 md:p-10 relative"
-            style={{
-              border: '1px solid var(--orange)',
-              background: 'var(--black)',
-            }}
+            style={{ border: '1px solid var(--orange)', background: 'var(--black)' }}
           >
             {submitted ? (
               <div className="py-16 text-center">
@@ -54,21 +74,11 @@ export default function ContactPage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6"
                   style={{ background: 'rgba(232, 76, 13, 0.15)' }}
                 >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="var(--orange)"
-                    strokeWidth="2"
-                  >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" strokeWidth="2">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
-                <h2
-                  className="font-display text-white mb-3"
-                  style={{ fontSize: '28px', fontStyle: 'italic' }}
-                >
+                <h2 className="font-display text-white mb-3" style={{ fontSize: '28px', fontStyle: 'italic' }}>
                   Message received!
                 </h2>
                 <p className="text-white/50 text-sm">
@@ -85,12 +95,9 @@ export default function ContactPage() {
                 </h1>
 
                 <div className="flex flex-col gap-6">
-                  {/* Email + Name row */}
                   <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">
-                        Email
-                      </label>
+                      <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">Email</label>
                       <input
                         type="email"
                         name="email"
@@ -101,9 +108,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">
-                        Name
-                      </label>
+                      <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">Name</label>
                       <input
                         type="text"
                         name="name"
@@ -115,11 +120,8 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  {/* Location */}
                   <div>
-                    <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">
-                      Location
-                    </label>
+                    <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">Location</label>
                     <div className="relative">
                       <select
                         name="location"
@@ -128,27 +130,19 @@ export default function ContactPage() {
                         className="form-select w-full pr-8"
                       >
                         <option value="">Select...</option>
-                        {locations.map((l) => (
-                          <option key={l} value={l}>
-                            {l}
-                          </option>
+                        {LOCATIONS.map((l) => (
+                          <option key={l} value={l}>{l}</option>
                         ))}
                       </select>
                       <svg
                         className="absolute right-0 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
+                        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                       >
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </div>
                   </div>
 
-                  {/* Message */}
                   <div>
                     <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">
                       What&apos;s in your mind
@@ -164,15 +158,15 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  {/* Submit */}
+                  {error && (
+                    <p className="text-sm" style={{ color: '#ff4444' }}>{error}</p>
+                  )}
+
                   <button
                     onClick={handleSubmit}
-                    disabled={loading || !form.email || !form.name}
+                    disabled={loading || !form.email || !form.name || !form.message}
                     className="w-full py-4 rounded-xl text-white text-sm font-medium tracking-wide transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
-                    style={{
-                      border: '1px solid #333',
-                      background: 'transparent',
-                    }}
+                    style={{ border: '1px solid #333', background: 'transparent' }}
                     onMouseEnter={(e) => {
                       if (!loading) {
                         ;(e.target as HTMLButtonElement).style.background = 'var(--orange)'
