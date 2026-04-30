@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import dotenv from 'dotenv'
+import path from 'path'
 
-dotenv.config()
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') })
 
 // ─────────────────────────────────────────────────────────
 // Schema — validates all env vars at startup

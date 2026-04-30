@@ -4,7 +4,9 @@ import path from 'path'
 
 const { combine, timestamp, printf, colorize, errors, json } = winston.format
 
+const BACKEND_ROOT = path.resolve(__dirname, '../../../../')
 const LOG_DIR = process.env.LOG_DIR || 'logs'
+const RESOLVED_LOG_DIR = path.isAbsolute(LOG_DIR) ? LOG_DIR : path.join(BACKEND_ROOT, LOG_DIR)
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 const IS_PROD = process.env.NODE_ENV === 'production'
 
@@ -35,7 +37,7 @@ const transports: winston.transport[] = [
 if (IS_PROD) {
   transports.push(
     new DailyRotateFile({
-      filename: path.join(LOG_DIR, 'error-%DATE%.log'),
+      filename: path.join(RESOLVED_LOG_DIR, 'error-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
       level: 'error',
       maxSize: '20m',
@@ -43,7 +45,7 @@ if (IS_PROD) {
       format: prodFormat,
     }),
     new DailyRotateFile({
-      filename: path.join(LOG_DIR, 'combined-%DATE%.log'),
+      filename: path.join(RESOLVED_LOG_DIR, 'combined-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
       maxSize: '20m',
       maxFiles: '7d',
