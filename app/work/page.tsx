@@ -29,7 +29,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
   return (
     <div
-      id={project.slug}
+      id={project.id}
       ref={cardRef}
       className="work-card"
       style={{
@@ -131,7 +131,21 @@ export default function WorkPage() {
           setProjects(data.data)
         }
       })
-      .catch(() => {}) // silently keep fallback on network error
+      .catch(() => {})
+  }, [])
+
+  // Hash-based deep-link: scroll to card + briefly highlight it
+  useEffect(() => {
+    const hash = window.location.hash.slice(1)
+    if (!hash) return
+    const timer = setTimeout(() => {
+      const target = document.getElementById(hash)
+      if (!target) return
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      target.classList.add('card-highlighted')
+      setTimeout(() => target.classList.remove('card-highlighted'), 1800)
+    }, 300)
+    return () => clearTimeout(timer)
   }, [])
 
   return (

@@ -131,22 +131,27 @@ body {
 .delay-7 { transition-delay: 560ms; }
 .delay-8 { transition-delay: 640ms; }
 
-/* ==================== HERO COLLAGE ==================== */
+/* ==================== HERO PHOTO GRID ==================== */
 
 .collage-container {
-  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(12px, 2vw, 24px);
   width: 100%;
-  min-height: 700px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .collage-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .collage-item {
-  position: absolute;
+  position: relative;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  height: clamp(180px, 22vw, 300px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
 }
 
 /* ==================== SERVICES FAN CARDS ==================== */
@@ -203,6 +208,14 @@ body {
     width: clamp(70px, 19vw, 110px);
     height: clamp(150px, 34vw, 200px);
   }
+}
+
+/* ==================== CARD HIGHLIGHT (deep-link arrival) ==================== */
+
+.card-highlighted {
+  outline: 2px solid #E85000;
+  outline-offset: 4px;
+  transition: outline 0.3s ease;
 }
 
 /* ==================== TESTIMONIALS ==================== */

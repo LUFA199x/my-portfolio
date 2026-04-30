@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const services = [
   'Photography',
@@ -14,9 +15,21 @@ const services = [
   'Film',
 ]
 
+const SERVICE_IDS: Record<string, string> = {
+  'Photography':        'project-photography',
+  'Portrait':           'project-portrait',
+  'Fashion Shoots':     'project-fashion-shoots',
+  'Street':             'project-street',
+  'Creative Direction': 'project-creative-direction',
+  'Couples':            'project-couples',
+  'iPhone Shots':       'project-iphone-shots',
+  'Film':               'project-film',
+}
+
 export default function Services() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const ref = useRef<HTMLElement>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const els = ref.current?.querySelectorAll('.reveal')
@@ -95,11 +108,15 @@ export default function Services() {
                 }}
                 onMouseEnter={() => setHoveredIndex(i)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => router.push(`/work#${SERVICE_IDS[service]}`)}
                 role="button"
                 tabIndex={0}
-                aria-label={service}
+                aria-label={`View ${service} projects`}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') setHoveredIndex(i)
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    router.push(`/work#${SERVICE_IDS[service]}`)
+                  }
                 }}
               >
                 {/* Globe icon */}
