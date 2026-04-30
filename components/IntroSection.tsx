@@ -48,7 +48,7 @@ export default function IntroSection() {
         <div className="reveal delay-2 flex flex-col md:flex-row gap-12 md:gap-24 items-start">
           <p
             className="text-white/60 leading-relaxed max-w-xl"
-            style={{ fontSize: '15px', fontWeight: 300 }}
+            style={{ fontSize: '16px', fontWeight: 300 }}
           >
             I&apos;m Adegheosa, a visual artist exploring the space between lifestyle, product,
             and portrait photography. Every frame I shoot carries intention — I don&apos;t just

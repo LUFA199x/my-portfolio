@@ -33,7 +33,7 @@ export default function AboutSection() {
 
           {/* Card 1 — Quote + dots */}
           <div
-            className="reveal-scale delay-1 relative rounded-2xl overflow-hidden flex flex-col justify-between p-7"
+            className="about-card reveal-scale delay-1 relative rounded-2xl overflow-hidden flex flex-col justify-between p-7"
             style={{
               background: '#141414',
               border: '1px solid #1f1f1f',
@@ -68,7 +68,7 @@ export default function AboutSection() {
 
           {/* Card 2 — Portrait + shoot info */}
           <div
-            className="reveal-scale delay-2 relative rounded-2xl overflow-hidden flex flex-col"
+            className="about-card reveal-scale delay-2 relative rounded-2xl overflow-hidden flex flex-col"
             style={{
               background: '#141414',
               border: '1px solid #1f1f1f',
@@ -79,7 +79,7 @@ export default function AboutSection() {
             <div className="relative flex-1" style={{ minHeight: '240px' }}>
               <Image
                 src="https://picsum.photos/seed/adegheosa/400/300"
-                alt="Adegheosa"
+                alt="Adegheosa — portrait photographer based in Lagos"
                 fill
                 style={{ objectFit: 'cover' }}
                 sizes="400px"
@@ -112,7 +112,7 @@ export default function AboutSection() {
 
           {/* Card 3 — Red image + question */}
           <div
-            className="reveal-scale delay-3 relative rounded-2xl overflow-hidden flex flex-col justify-end"
+            className="about-card reveal-scale delay-3 relative rounded-2xl overflow-hidden flex flex-col justify-end"
             style={{
               background: '#8B1A1A',
               minHeight: '360px',
@@ -122,7 +122,7 @@ export default function AboutSection() {
             <div className="absolute inset-0">
               <Image
                 src="https://picsum.photos/seed/redlight/400/400"
-                alt="Red light photography"
+                alt="Dramatic red-lit photography session"
                 fill
                 style={{ objectFit: 'cover', mixBlendMode: 'multiply', opacity: 0.6 }}
                 sizes="400px"

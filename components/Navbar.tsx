@@ -62,6 +62,8 @@ export default function Navbar() {
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden flex flex-col gap-1.5 p-2 group"
           aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav"
         >
           <span
             className={`block w-5 h-px bg-white transition-all duration-300 ${
@@ -83,6 +85,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
+        id="mobile-nav"
         className={`md:hidden transition-all duration-300 overflow-hidden ${
           menuOpen ? 'max-h-60 border-b border-white/5' : 'max-h-0'
         }`}

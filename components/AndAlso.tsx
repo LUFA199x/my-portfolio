@@ -21,7 +21,7 @@ export default function AndAlso() {
       ref={ref}
       className="bg-[var(--black)] py-20 md:py-24 px-6 md:px-10"
     >
-      <div className="max-w-screen-xl mx-auto max-w-3xl">
+      <div className="max-w-screen-xl mx-auto">
         <h2
           className="reveal font-display text-[var(--orange)] mb-5"
           style={{ fontSize: 'clamp(32px, 6vw, 64px)', fontStyle: 'italic', fontWeight: 600 }}

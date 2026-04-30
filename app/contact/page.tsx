@@ -97,33 +97,44 @@ export default function ContactPage() {
                 <div className="flex flex-col gap-6">
                   <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">Email</label>
+                      <label htmlFor="contact-email" className="text-white/50 text-xs tracking-widest uppercase block mb-2">
+                        Email <span aria-hidden="true" style={{ color: 'var(--orange)' }}>*</span>
+                      </label>
                       <input
+                        id="contact-email"
                         type="email"
                         name="email"
                         value={form.email}
                         onChange={handleChange}
                         placeholder="Your Email"
                         className="form-input"
+                        autoComplete="email"
+                        required
                       />
                     </div>
                     <div>
-                      <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">Name</label>
+                      <label htmlFor="contact-name" className="text-white/50 text-xs tracking-widest uppercase block mb-2">
+                        Name <span aria-hidden="true" style={{ color: 'var(--orange)' }}>*</span>
+                      </label>
                       <input
+                        id="contact-name"
                         type="text"
                         name="name"
                         value={form.name}
                         onChange={handleChange}
                         placeholder="Jane Smith"
                         className="form-input"
+                        autoComplete="name"
+                        required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">Location</label>
+                    <label htmlFor="contact-location" className="text-white/50 text-xs tracking-widest uppercase block mb-2">Location</label>
                     <div className="relative">
                       <select
+                        id="contact-location"
                         name="location"
                         value={form.location}
                         onChange={handleChange}
@@ -144,10 +155,11 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="text-white/50 text-xs tracking-widest uppercase block mb-2">
-                      What&apos;s in your mind
+                    <label htmlFor="contact-message" className="text-white/50 text-xs tracking-widest uppercase block mb-2">
+                      What&apos;s in your mind <span aria-hidden="true" style={{ color: 'var(--orange)' }}>*</span>
                     </label>
                     <textarea
+                      id="contact-message"
                       name="message"
                       value={form.message}
                       onChange={handleChange}
@@ -155,6 +167,7 @@ export default function ContactPage() {
                       rows={5}
                       className="form-input resize-none"
                       style={{ borderBottom: '1px solid #333', paddingBottom: '12px' }}
+                      required
                     />
                   </div>
 
@@ -162,7 +175,12 @@ export default function ContactPage() {
                     <p className="text-sm" style={{ color: '#ff4444' }}>{error}</p>
                   )}
 
+                  <p className="text-white/30 text-xs">
+                    <span style={{ color: 'var(--orange)' }}>*</span> Required fields
+                  </p>
+
                   <button
+                    type="button"
                     onClick={handleSubmit}
                     disabled={loading || !form.email || !form.name || !form.message}
                     className="w-full py-4 rounded-xl text-white text-sm font-medium tracking-wide transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"

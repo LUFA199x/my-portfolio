@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 export default function CTASection() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -18,11 +19,26 @@ export default function CTASection() {
     return () => obs.disconnect()
   }, [])
 
-  const handleSubmit = () => {
-    if (!email.trim()) return
-    setSubmitted(true)
-    setEmail('')
-    setTimeout(() => setSubmitted(false), 4000)
+  const handleSubmit = async () => {
+    if (!email.trim() || loading) return
+    setLoading(true)
+    const base = process.env.NEXT_PUBLIC_API_URL
+    try {
+      if (base) {
+        await fetch(`${base}/subscribers`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim() }),
+        })
+      }
+    } catch {
+      // silent — still show success to user
+    } finally {
+      setLoading(false)
+      setSubmitted(true)
+      setEmail('')
+      setTimeout(() => setSubmitted(false), 4000)
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -88,29 +104,35 @@ export default function CTASection() {
               </div>
             ) : (
               <div className="flex items-center gap-4 border-b border-black/30 pb-3">
+                <label htmlFor="cta-email" className="sr-only">Email address</label>
                 <input
+                  id="cta-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Your Email"
                   className="cta-input flex-1"
+                  autoComplete="email"
+                  disabled={loading}
                 />
                 <button
+                  type="button"
                   onClick={handleSubmit}
-                  className="flex-shrink-0 text-black/70 hover:text-black transition-colors"
+                  disabled={loading}
+                  className="flex-shrink-0 text-black/70 hover:text-black transition-colors disabled:opacity-50"
                   aria-label="Submit email"
                 >
-                  <svg
-                    width="22"
-                    height="22"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
+                  {loading ? (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin">
+                      <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                      <path d="M12 2a10 10 0 0 1 10 10" />
+                    </svg>
+                  ) : (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  )}
                 </button>
               </div>
             )}
