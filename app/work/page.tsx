@@ -16,6 +16,76 @@ interface Project {
   published: boolean
 }
 
+// Shown immediately — replaced by API data when the backend is reachable
+const FALLBACK: Project[] = [
+  {
+    id: 'f1',
+    title: 'Studio Series',
+    slug: 'studio-series',
+    category: 'Portrait · Photography',
+    year: '2024',
+    summary: 'Clean studio work with a focus on natural light and effortless posing. Every frame breathes.',
+    coverImage: 'https://picsum.photos/seed/proj1/600/700',
+    featured: true,
+    published: true,
+  },
+  {
+    id: 'f2',
+    title: 'Smoke & Silence',
+    slug: 'smoke-and-silence',
+    category: 'Portrait · B&W',
+    year: '2024',
+    summary: 'Black and white portraiture exploring masculine stillness. Minimal props, maximum presence.',
+    coverImage: 'https://picsum.photos/seed/proj2/600/700',
+    featured: false,
+    published: true,
+  },
+  {
+    id: 'f3',
+    title: 'Edric — 3 Months',
+    slug: 'edric-3-months',
+    category: 'Family · Lifestyle',
+    year: '2024',
+    summary: 'A milestone session filled with sunflowers, laughter, and that new-baby magic.',
+    coverImage: 'https://picsum.photos/seed/proj3/600/700',
+    featured: false,
+    published: true,
+  },
+  {
+    id: 'f4',
+    title: 'Soft Morning',
+    slug: 'soft-morning',
+    category: 'Fashion · Studio',
+    year: '2024',
+    summary: 'An all-white editorial about slowness. We let the light do all the talking.',
+    coverImage: 'https://picsum.photos/seed/proj4/600/700',
+    featured: true,
+    published: true,
+  },
+  {
+    id: 'f5',
+    title: 'Golden Field',
+    slug: 'golden-field',
+    category: 'Outdoor · Lifestyle',
+    year: '2023',
+    summary: 'Chasing golden hour on the edge of Lagos. Grass, sky, and a single figure reading.',
+    coverImage: 'https://picsum.photos/seed/proj5/600/700',
+    featured: false,
+    published: true,
+  },
+  {
+    id: 'f6',
+    title: 'Urban Canopy',
+    slug: 'urban-canopy',
+    category: 'Street · Nature',
+    year: '2023',
+    summary: 'Looking up at Lagos — tree canopies framing architecture in unexpected ways.',
+    coverImage: 'https://picsum.photos/seed/proj6/600/700',
+    featured: false,
+    published: true,
+  },
+]
+
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [hovered, setHovered] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -51,17 +121,22 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* Cover image */}
       <div className="absolute inset-0 bg-[#1a1a1a]">
         <Image
           src={project.coverImage}
           alt={project.title}
           fill
-          style={{ objectFit: 'cover', transition: 'transform 0.6s ease' }}
-          className={hovered ? 'scale-105' : 'scale-100'}
+          style={{
+            objectFit: 'cover',
+            transition: 'transform 0.6s ease',
+            transform: hovered ? 'scale(1.05)' : 'scale(1)',
+          }}
           sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
 
+      {/* Default bottom label — fades out on hover */}
       <div
         className="work-card-overlay"
         style={{ opacity: hovered ? 0 : 1, transition: 'opacity 0.3s ease' }}
@@ -69,6 +144,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <p className="text-white text-sm font-medium">See Work.</p>
       </div>
 
+      {/* Hover overlay — full detail panel */}
       <div className="work-card-details">
         <div className="mb-auto">
           <p className="text-[var(--orange)] text-xs tracking-widest uppercase mb-3">See Work.</p>
@@ -99,21 +175,19 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export default function WorkPage() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
+  const [projects, setProjects] = useState<Project[]>(FALLBACK)
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_API_URL
-    if (!base) { setLoading(false); return }
+    if (!base) return
     fetch(`${base}/projects?published=true&limit=50`)
       .then((r) => r.json())
       .then((data) => {
-        if (data.success && Array.isArray(data.data)) {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
           setProjects(data.data)
         }
       })
-      .catch(() => {})
-      .finally(() => setLoading(false))
+      .catch(() => {}) // silently keep fallback on network error
   }, [])
 
   return (
@@ -134,19 +208,11 @@ export default function WorkPage() {
             </p>
           </div>
 
-          {loading ? (
-            <div className="flex justify-center py-24">
-              <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-[var(--orange)] animate-spin" />
-            </div>
-          ) : projects.length === 0 ? (
-            <p className="text-white/30 py-24 text-center">No projects yet.</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 pb-24">
-              {projects.map((project, i) => (
-                <ProjectCard key={project.id} project={project} index={i} />
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 pb-24">
+            {projects.map((project, i) => (
+              <ProjectCard key={project.id} project={project} index={i} />
+            ))}
+          </div>
         </div>
       </div>
       <Footer />
