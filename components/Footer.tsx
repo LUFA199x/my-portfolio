@@ -17,8 +17,8 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-20">
             {/* Location */}
             <div>
-              <p className="text-white/30 text-xs tracking-widest uppercase mb-3">[Location]</p>
-              <p className="text-white/70 text-sm leading-relaxed">
+              <p className="font-ui text-white/30 text-xs uppercase mb-3" style={{ letterSpacing: '0.16em' }}>[Location]</p>
+              <p className="font-body text-white/70 text-sm leading-relaxed" style={{ fontWeight: 300 }}>
                 Lagos
                 <br />
                 5 Kayode Taiwo St, Ikosi Ketu,
@@ -27,13 +27,21 @@ export default function Footer() {
 
             {/* Pages */}
             <div>
-              <p className="text-white/30 text-xs tracking-widest uppercase mb-3">[Pages]</p>
+              <p className="font-ui text-white/30 text-xs uppercase mb-3" style={{ letterSpacing: '0.16em' }}>[Pages]</p>
               <nav className="flex flex-col gap-2">
                 {footerLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-white/60 text-sm hover:text-[var(--orange)] transition-colors duration-200"
+                    className="hover:text-[var(--orange)] transition-colors duration-200"
+                    style={{
+                      fontFamily: 'var(--font-josefin)',
+                      fontSize: '12px',
+                      fontWeight: 400,
+                      letterSpacing: '0.13em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(255,255,255,0.55)',
+                    }}
                   >
                     {link.label}
                   </Link>
@@ -43,31 +51,34 @@ export default function Footer() {
 
             {/* Social */}
             <div>
-              <p className="text-white/30 text-xs tracking-widest uppercase mb-3">[Connect]</p>
+              <p className="font-ui text-white/30 text-xs uppercase mb-3" style={{ letterSpacing: '0.16em' }}>[Connect]</p>
               <div className="flex flex-col gap-2">
                 <a
                   href="mailto:bookarhday@gmail.com"
-                  className="text-white/60 text-sm hover:text-white transition-colors duration-200 group"
+                  className="font-body text-white/60 text-sm hover:text-white transition-colors duration-200 group"
+                  style={{ fontWeight: 400 }}
                 >
-                  <span className="text-white/30 text-xs block mb-0.5">[My Email]</span>
+                  <span className="font-body text-white/30 text-xs block mb-0.5" style={{ fontStyle: 'italic', fontWeight: 300 }}>[My Email]</span>
                   bookarhday@gmail.com
                 </a>
                 <a
                   href="https://instagram.com/_arhday_photography"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/60 text-sm hover:text-white transition-colors duration-200"
+                  className="font-body text-white/60 text-sm hover:text-white transition-colors duration-200"
+                  style={{ fontWeight: 400 }}
                 >
-                  <span className="text-white/30 text-xs block mb-0.5">[My Instagram]</span>
+                  <span className="font-body text-white/30 text-xs block mb-0.5" style={{ fontStyle: 'italic', fontWeight: 300 }}>[My Instagram]</span>
                   @_arhday_photography
                 </a>
                 <a
                   href="https://x.com/_arhday_photography"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/60 text-sm hover:text-white transition-colors duration-200"
+                  className="font-body text-white/60 text-sm hover:text-white transition-colors duration-200"
+                  style={{ fontWeight: 400 }}
                 >
-                  <span className="text-white/30 text-xs block mb-0.5">[My X]</span>
+                  <span className="font-body text-white/30 text-xs block mb-0.5" style={{ fontStyle: 'italic', fontWeight: 300 }}>[My X]</span>
                   @_arhday_photography
                 </a>
               </div>
@@ -76,7 +87,7 @@ export default function Footer() {
         </div>
 
         {/* Big name */}
-        <div className="relative -mx-6 md:-mx-10 overflow-hidden">
+        <div className="relative -mx-6 md:-mx-10 overflow-x-hidden">
           <p
             className="footer-big-text select-none px-4 md:px-8"
             aria-hidden="true"
@@ -87,10 +98,10 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 pt-6 border-t border-white/5 mt-4">
-          <p className="text-white/20 text-xs">
+          <p className="font-body text-white/20 text-xs" style={{ fontWeight: 300 }}>
             [Created by ADEGHEOSA] © {year}
           </p>
-          <p className="text-white/20 text-xs">
+          <p className="font-body text-white/20 text-xs" style={{ fontWeight: 300 }}>
             Built in pixels, shaped in Adegheosa &nbsp;·&nbsp; [Powered by Next.js]
           </p>
         </div>

@@ -34,20 +34,21 @@ export default function IntroSection() {
           className="reveal font-display text-white leading-tight mb-10 md:mb-12"
           style={{
             fontSize: 'clamp(42px, 8vw, 110px)',
-            fontWeight: 700,
+            fontWeight: 900,
+            fontStyle: 'italic',
             letterSpacing: '-2px',
             maxWidth: '900px',
           }}
         >
           Lights, Lens and
           <br />
-          <span style={{ color: 'var(--orange)', fontStyle: 'italic' }}>Adegheosa.</span>
+          <span style={{ color: 'var(--orange)' }}>Adegheosa.</span>
         </h1>
 
         {/* Bio */}
         <div className="reveal delay-2 flex flex-col md:flex-row gap-12 md:gap-24 items-start">
           <p
-            className="text-white/60 leading-relaxed max-w-xl"
+            className="text-white/60 leading-relaxed max-w-xl font-body"
             style={{ fontSize: '16px', fontWeight: 300 }}
           >
             I&apos;m Adegheosa, a visual artist exploring the space between lifestyle, product,
@@ -59,19 +60,26 @@ export default function IntroSection() {
             <Link
               href="/work"
               className="inline-flex items-center gap-3 group"
+              style={{
+                fontFamily: 'var(--font-josefin)',
+                fontSize: '12px',
+                fontWeight: 600,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: 'white',
+                textDecoration: 'none',
+              }}
             >
-              <span
-                className="text-white text-sm tracking-widest uppercase font-medium group-hover:text-[var(--orange)] transition-colors duration-300"
-              >
+              <span className="group-hover:text-[var(--orange)] transition-colors duration-300">
                 View Work
               </span>
               <svg
-                width="20"
-                height="20"
+                width="14"
+                height="14"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1.5"
+                strokeWidth="2.5"
                 className="text-[var(--orange)] group-hover:translate-x-1 transition-transform duration-300"
               >
                 <path d="M7 17L17 7M17 7H7M17 7v10" />
@@ -81,20 +89,27 @@ export default function IntroSection() {
             <Link
               href="/contact"
               className="inline-flex items-center gap-3 group"
+              style={{
+                fontFamily: 'var(--font-josefin)',
+                fontSize: '12px',
+                fontWeight: 600,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.45)',
+                textDecoration: 'none',
+              }}
             >
-              <span
-                className="text-white/50 text-sm tracking-widest uppercase font-medium group-hover:text-white transition-colors duration-300"
-              >
+              <span className="group-hover:text-white transition-colors duration-300">
                 Book a Shoot
               </span>
               <svg
-                width="20"
-                height="20"
+                width="14"
+                height="14"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1.5"
-                className="text-white/30 group-hover:translate-x-1 group-hover:text-white transition-all duration-300"
+                strokeWidth="2.5"
+                className="group-hover:translate-x-1 group-hover:text-white transition-all duration-300"
               >
                 <path d="M7 17L17 7M17 7H7M17 7v10" />
               </svg>

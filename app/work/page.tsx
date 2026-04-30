@@ -3,88 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Footer from '@/components/Footer'
-
-interface Project {
-  id: string
-  title: string
-  slug: string
-  category: string
-  year: string
-  summary: string
-  coverImage: string
-  featured: boolean
-  published: boolean
-}
-
-// Shown immediately — replaced by API data when the backend is reachable
-const FALLBACK: Project[] = [
-  {
-    id: 'f1',
-    title: 'Studio Series',
-    slug: 'studio-series',
-    category: 'Portrait · Photography',
-    year: '2024',
-    summary: 'Clean studio work with a focus on natural light and effortless posing. Every frame breathes.',
-    coverImage: 'https://picsum.photos/seed/proj1/600/700',
-    featured: true,
-    published: true,
-  },
-  {
-    id: 'f2',
-    title: 'Smoke & Silence',
-    slug: 'smoke-and-silence',
-    category: 'Portrait · B&W',
-    year: '2024',
-    summary: 'Black and white portraiture exploring masculine stillness. Minimal props, maximum presence.',
-    coverImage: 'https://picsum.photos/seed/proj2/600/700',
-    featured: false,
-    published: true,
-  },
-  {
-    id: 'f3',
-    title: 'Edric — 3 Months',
-    slug: 'edric-3-months',
-    category: 'Family · Lifestyle',
-    year: '2024',
-    summary: 'A milestone session filled with sunflowers, laughter, and that new-baby magic.',
-    coverImage: 'https://picsum.photos/seed/proj3/600/700',
-    featured: false,
-    published: true,
-  },
-  {
-    id: 'f4',
-    title: 'Soft Morning',
-    slug: 'soft-morning',
-    category: 'Fashion · Studio',
-    year: '2024',
-    summary: 'An all-white editorial about slowness. We let the light do all the talking.',
-    coverImage: 'https://picsum.photos/seed/proj4/600/700',
-    featured: true,
-    published: true,
-  },
-  {
-    id: 'f5',
-    title: 'Golden Field',
-    slug: 'golden-field',
-    category: 'Outdoor · Lifestyle',
-    year: '2023',
-    summary: 'Chasing golden hour on the edge of Lagos. Grass, sky, and a single figure reading.',
-    coverImage: 'https://picsum.photos/seed/proj5/600/700',
-    featured: false,
-    published: true,
-  },
-  {
-    id: 'f6',
-    title: 'Urban Canopy',
-    slug: 'urban-canopy',
-    category: 'Street · Nature',
-    year: '2023',
-    summary: 'Looking up at Lagos — tree canopies framing architecture in unexpected ways.',
-    coverImage: 'https://picsum.photos/seed/proj6/600/700',
-    featured: false,
-    published: true,
-  },
-]
+import { FALLBACK_PROJECTS, type Project } from '@/lib/projects'
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [hovered, setHovered] = useState(false)
@@ -110,6 +29,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
   return (
     <div
+      id={project.slug}
       ref={cardRef}
       className="work-card"
       style={{
@@ -117,6 +37,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         transform: 'translateY(30px)',
         transition: 'opacity 0.7s ease, transform 0.7s ease',
         height: 'clamp(300px, 40vw, 480px)',
+        scrollMarginTop: '120px',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -141,21 +62,44 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         className="work-card-overlay"
         style={{ opacity: hovered ? 0 : 1, transition: 'opacity 0.3s ease' }}
       >
-        <p className="text-white text-sm font-medium">See Work.</p>
+        <p
+          style={{
+            fontFamily: 'var(--font-josefin)',
+            fontSize: '11px',
+            fontWeight: 600,
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            color: 'white',
+          }}
+        >
+          See Work.
+        </p>
       </div>
 
       {/* Hover overlay — full detail panel */}
       <div className="work-card-details">
         <div className="mb-auto">
-          <p className="text-[var(--orange)] text-xs tracking-widest uppercase mb-3">See Work.</p>
+          <p
+            style={{
+              fontFamily: 'var(--font-josefin)',
+              fontSize: '10px',
+              fontWeight: 600,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: 'var(--orange)',
+              marginBottom: '12px',
+            }}
+          >
+            See Work.
+          </p>
           <div className="flex justify-between mb-4">
             <div>
-              <p className="text-white/40 text-xs mb-1">Category</p>
-              <p className="text-white text-sm">{project.category}</p>
+              <p className="font-body text-white/40 text-xs mb-1" style={{ fontStyle: 'italic', fontWeight: 300 }}>Category</p>
+              <p className="font-body text-white text-sm" style={{ fontWeight: 400 }}>{project.category}</p>
             </div>
             <div className="text-right">
-              <p className="text-white/40 text-xs mb-1">Year</p>
-              <p className="text-white text-sm">{project.year}</p>
+              <p className="font-body text-white/40 text-xs mb-1" style={{ fontStyle: 'italic', fontWeight: 300 }}>Year</p>
+              <p className="font-body text-white text-sm" style={{ fontWeight: 400 }}>{project.year}</p>
             </div>
           </div>
         </div>
@@ -163,11 +107,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <div className="mt-auto">
           <h3
             className="font-display text-white text-2xl mb-3"
-            style={{ fontStyle: 'italic', fontWeight: 600 }}
+            style={{ fontStyle: 'italic', fontWeight: 900 }}
           >
             {project.title}
           </h3>
-          <p className="text-white/50 text-sm leading-relaxed">{project.summary}</p>
+          <p className="font-body text-white/50 text-sm leading-relaxed" style={{ fontWeight: 300 }}>{project.summary}</p>
         </div>
       </div>
     </div>
@@ -175,7 +119,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export default function WorkPage() {
-  const [projects, setProjects] = useState<Project[]>(FALLBACK)
+  const [projects, setProjects] = useState<Project[]>(FALLBACK_PROJECTS)
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_API_URL
@@ -197,11 +141,11 @@ export default function WorkPage() {
           <div className="mb-12 md:mb-16">
             <h1
               className="font-display text-white mb-4"
-              style={{ fontSize: 'clamp(40px, 8vw, 96px)', fontWeight: 400, letterSpacing: '-2px' }}
+              style={{ fontSize: 'clamp(40px, 8vw, 96px)', fontWeight: 900, fontStyle: 'italic', letterSpacing: '-2px' }}
             >
               Projects
             </h1>
-            <p className="text-white/50 max-w-2xl text-sm md:text-base leading-relaxed">
+            <p className="font-body text-white/50 max-w-2xl text-sm md:text-base leading-relaxed" style={{ fontWeight: 300 }}>
               Each project is a vibe, a story, a snapshot of something that felt real. From blurred
               motion to golden stillness, this is where concept meets emotion. Dive in — every frame
               has a pulse.

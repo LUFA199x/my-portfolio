@@ -24,14 +24,14 @@ export default function AndAlso() {
       <div className="max-w-screen-xl mx-auto">
         <h2
           className="reveal font-display text-[var(--orange)] mb-5"
-          style={{ fontSize: 'clamp(32px, 6vw, 64px)', fontStyle: 'italic', fontWeight: 600 }}
+          style={{ fontSize: 'clamp(32px, 6vw, 64px)', fontStyle: 'italic', fontWeight: 900 }}
         >
           And Also
         </h2>
 
         <div className="reveal delay-2">
           <p
-            className="text-white/60 leading-relaxed"
+            className="font-body text-white/60 leading-relaxed"
             style={{ fontSize: 'clamp(14px, 1.8vw, 16px)', fontWeight: 300, maxWidth: '680px' }}
           >
             Golden hour. Street noise. That one breath before the beat drops.

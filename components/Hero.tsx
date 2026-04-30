@@ -149,7 +149,17 @@ export default function Hero() {
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 opacity-40">
-        <span className="text-xs tracking-widest uppercase">Scroll</span>
+        <span
+          style={{
+            fontFamily: 'var(--font-josefin)',
+            fontSize: '10px',
+            fontWeight: 400,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+          }}
+        >
+          Scroll
+        </span>
         <div className="w-px h-8 bg-white/60 animate-[bounce_2s_ease-in-out_infinite]" />
       </div>
     </section>

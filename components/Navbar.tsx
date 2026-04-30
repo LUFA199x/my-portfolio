@@ -36,8 +36,14 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="text-white font-display font-semibold text-sm tracking-[0.2em] hover:text-orange transition-colors duration-300"
-          style={{ fontFamily: 'var(--font-outfit)', letterSpacing: '0.15em' }}
+          className="text-white hover:text-[var(--orange)] transition-colors duration-300"
+          style={{
+            fontFamily: 'var(--font-josefin)',
+            fontSize: '14px',
+            fontWeight: 700,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+          }}
         >
           ARHDAY
         </Link>
@@ -48,9 +54,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`nav-link text-sm tracking-wide ${
-                pathname === link.href ? 'active' : ''
-              }`}
+              className={`nav-link ${pathname === link.href ? 'active' : ''}`}
             >
               {link.label}
             </Link>
@@ -96,11 +100,18 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-lg font-display ${
+              className={`transition-colors ${
                 pathname === link.href
                   ? 'text-[var(--orange)]'
                   : 'text-white/70 hover:text-white'
-              } transition-colors`}
+              }`}
+              style={{
+                fontFamily: 'var(--font-josefin)',
+                fontSize: '13px',
+                fontWeight: 400,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+              }}
             >
               {link.label}
             </Link>

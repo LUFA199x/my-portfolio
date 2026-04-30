@@ -85,11 +85,11 @@ export default function CTASection() {
           <div className="relative max-w-2xl">
             <h2
               className="font-display text-black leading-tight mb-4"
-              style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 700 }}
+              style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 900, fontStyle: 'italic' }}
             >
               Ready to shoot something real?
             </h2>
-            <p className="text-black/70 text-sm md:text-base mb-10 leading-relaxed">
+            <p className="font-body text-black/70 text-sm md:text-base mb-10 leading-relaxed" style={{ fontWeight: 400 }}>
               Let&apos;s create something unforgettable whether it&apos;s a product, a moment, or a whole mood.
               Adegheosa&apos;s calendar fills up fast, so don&apos;t wait.
             </p>

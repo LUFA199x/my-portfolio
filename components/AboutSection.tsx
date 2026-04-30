@@ -23,7 +23,7 @@ export default function AboutSection() {
         {/* Section label */}
         <h2
           className="reveal font-display text-[var(--orange)] mb-10 md:mb-12"
-          style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontStyle: 'italic', fontWeight: 600 }}
+          style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontStyle: 'italic', fontWeight: 900 }}
         >
           (About Me)
         </h2>
@@ -42,7 +42,7 @@ export default function AboutSection() {
           >
             <p
               className="font-display text-white leading-snug"
-              style={{ fontSize: '26px', fontWeight: 500 }}
+              style={{ fontSize: '26px', fontWeight: 900, fontStyle: 'italic' }}
             >
               Photography is 20% light, 80% vibe
             </p>
@@ -59,8 +59,8 @@ export default function AboutSection() {
             </div>
 
             <p
-              className="mt-8 font-display text-white/50 text-base"
-              style={{ fontStyle: 'italic' }}
+              className="mt-8 font-body text-white/50 text-base"
+              style={{ fontStyle: 'italic', fontWeight: 300 }}
             >
               #True
             </p>
@@ -95,17 +95,17 @@ export default function AboutSection() {
             <div className="p-6 pt-4 flex flex-col gap-3">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-white/40 text-xs mb-1 tracking-wide">Shoot Dates</p>
-                  <p className="text-white text-sm font-medium">Flexible / TBD</p>
+                  <p className="font-body text-white/40 text-xs mb-1 tracking-wide" style={{ fontStyle: 'italic', fontWeight: 300 }}>Shoot Dates</p>
+                  <p className="font-body text-white text-sm" style={{ fontWeight: 400 }}>Flexible / TBD</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-white/40 text-xs mb-1 tracking-wide">Turnaround</p>
-                  <p className="text-white text-sm font-medium">Within 24HRS</p>
+                  <p className="font-body text-white/40 text-xs mb-1 tracking-wide" style={{ fontStyle: 'italic', fontWeight: 300 }}>Turnaround</p>
+                  <p className="font-body text-white text-sm" style={{ fontWeight: 400 }}>Within 24HRS</p>
                 </div>
               </div>
               <div>
-                <p className="text-white/40 text-xs mb-1 tracking-wide">Location:</p>
-                <p className="text-white text-sm font-medium">Anywhere with light</p>
+                <p className="font-body text-white/40 text-xs mb-1 tracking-wide" style={{ fontStyle: 'italic', fontWeight: 300 }}>Location:</p>
+                <p className="font-body text-white text-sm" style={{ fontWeight: 400 }}>Anywhere with light</p>
               </div>
             </div>
           </div>
@@ -150,7 +150,7 @@ export default function AboutSection() {
             <div className="relative z-10 p-7">
               <p
                 className="font-display text-white leading-tight"
-                style={{ fontSize: '24px', fontWeight: 600 }}
+                style={{ fontSize: '24px', fontWeight: 900, fontStyle: 'italic' }}
               >
                 What&apos;s the point of the frame?
               </p>

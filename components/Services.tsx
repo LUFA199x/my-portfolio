@@ -3,45 +3,20 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
-interface Service {
-  id: string
-  name: string
-  slug: string
-  description?: string
-  icon?: string
-  active: boolean
-  order: number
-}
-
-const FALLBACK: Service[] = [
-  { id: '1', name: 'Photography', slug: 'photography', active: true, order: 0 },
-  { id: '2', name: 'Portrait', slug: 'portrait', active: true, order: 1 },
-  { id: '3', name: 'Fashion Shoots', slug: 'fashion-shoots', active: true, order: 2 },
-  { id: '4', name: 'Street', slug: 'street', active: true, order: 3 },
-  { id: '5', name: 'Creative Direction', slug: 'creative-direction', active: true, order: 4 },
-  { id: '6', name: 'Couples', slug: 'couples', active: true, order: 5 },
-  { id: '7', name: 'iPhone Shots', slug: 'iphone-shots', active: true, order: 6 },
-  { id: '8', name: 'Film', slug: 'film', active: true, order: 7 },
+const services = [
+  'Photography',
+  'Portrait',
+  'Fashion Shoots',
+  'Street',
+  'Creative Direction',
+  'Couples',
+  'iPhone Shots',
+  'Film',
 ]
 
 export default function Services() {
-  const [services, setServices] = useState<Service[]>(FALLBACK)
-  const [active, setActive] = useState<string | null>('7')
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const ref = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_API_URL
-    if (!base) return
-    fetch(`${base}/services`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-          setServices(data.data)
-          setActive(data.data[0]?.id ?? null)
-        }
-      })
-      .catch(() => {})
-  }, [])
 
   useEffect(() => {
     const els = ref.current?.querySelectorAll('.reveal')
@@ -57,99 +32,106 @@ export default function Services() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden py-0"
-      style={{ background: 'var(--orange)' }}
+      className="relative overflow-hidden"
+      style={{ background: '#D84B00', padding: '52px 0 130px' }}
     >
-      <div className="w-full h-px bg-black/20" />
+      {/* Header */}
+      <div className="reveal text-center" style={{ marginBottom: '56px' }}>
+        <Link
+          href="/work"
+          style={{
+            fontFamily: 'var(--font-josefin)',
+            fontSize: '13px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            fontWeight: 600,
+            color: '#111',
+            textDecoration: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+          }}
+        >
+          See Work
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
+            <path d="M7 17L17 7M17 7H7M17 7v10" />
+          </svg>
+        </Link>
 
-      <div className="py-20 md:py-28 px-6 md:px-10">
-        <div className="max-w-screen-xl mx-auto">
-          <div className="reveal text-center mb-16 md:mb-20">
-            <Link
-              href="/work"
-              className="inline-flex items-center gap-2 text-black/70 text-sm tracking-widest uppercase mb-4 hover:text-black transition-colors group"
-            >
-              See Work
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
-              >
-                <path d="M7 17L17 7M17 7H7M17 7v10" />
-              </svg>
-            </Link>
-            <h2
-              className="font-display text-black leading-none tracking-tight"
-              style={{ fontSize: 'clamp(32px, 6vw, 72px)', fontWeight: 700, letterSpacing: '-1px' }}
-            >
-              THAT&apos;S MY SERVICES
-            </h2>
-          </div>
+        <h2
+          style={{
+            fontFamily: 'var(--font-playfair)',
+            fontStyle: 'italic',
+            fontSize: 'clamp(26px, 5.5vw, 76px)',
+            fontWeight: 900,
+            color: '#111',
+            letterSpacing: '-0.01em',
+            lineHeight: 1,
+            marginTop: '8px',
+          }}
+        >
+          That&apos;s My Services
+        </h2>
+      </div>
 
-          <div className="reveal delay-2 flex items-end gap-1.5 md:gap-2 justify-center overflow-x-auto pb-4">
+      {/* Fan cards */}
+      <div className="reveal delay-2" style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ perspective: '950px', perspectiveOrigin: '50% -10%' }}>
+          <div style={{ display: 'flex', width: 'fit-content' }}>
             {services.map((service, i) => (
               <div
-                key={service.id}
-                onClick={() => setActive(service.id === active ? null : service.id)}
-                className={`services-card flex-shrink-0 relative rounded-xl cursor-pointer select-none ${
-                  active === service.id ? 'active' : ''
-                }`}
+                key={service}
+                className={`fan-card${hoveredIndex === i ? ' fan-card--hovered' : ''}`}
                 style={{
-                  width: 'clamp(80px, 10vw, 130px)',
-                  height: 'clamp(220px, 30vw, 380px)',
-                  background: active === service.id ? '#1a1a1a' : '#141414',
-                  border:
-                    active === service.id
-                      ? '1px solid var(--orange-light, #ff5a1a)'
-                      : '1px solid #2a2a2a',
-                  transitionDelay: `${i * 40}ms`,
+                  zIndex: hoveredIndex === i ? 100 : i + 1,
+                  marginLeft: i === 0 ? 0 : 'clamp(-64px, -9vw, -98px)',
+                }}
+                onMouseEnter={() => setHoveredIndex(i)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                role="button"
+                tabIndex={0}
+                aria-label={service}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') setHoveredIndex(i)
                 }}
               >
-                <div className="absolute top-3 right-3">
-                  <div
-                    className="w-5 h-5 rounded-full border"
-                    style={{ borderColor: active === service.id ? 'var(--orange)' : '#333' }}
+                {/* Globe icon */}
+                <div
+                  className="globe-icon"
+                  style={{ position: 'absolute', top: '10px', right: '9px' }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.7)"
+                    strokeWidth="1.2"
                   >
-                    <div
-                      className="absolute inset-0 flex items-center justify-center"
-                      style={{ overflow: 'hidden', borderRadius: '50%' }}
-                    >
-                      <div
-                        className="w-full border-t"
-                        style={{ borderColor: active === service.id ? 'var(--orange)' : '#333' }}
-                      />
-                    </div>
-                  </div>
+                    <circle cx="8" cy="8" r="6.5" />
+                    <ellipse cx="8" cy="8" rx="3" ry="6.5" />
+                    <line x1="1.5" y1="8" x2="14.5" y2="8" />
+                  </svg>
                 </div>
 
-                <div className="absolute bottom-6 left-0 right-0 px-3">
-                  <p
-                    className="font-display text-white"
-                    style={{
-                      fontSize: 'clamp(11px, 1.2vw, 15px)',
-                      fontWeight: 500,
-                      writingMode: 'vertical-rl',
-                      textOrientation: 'mixed',
-                      transform: 'rotate(180deg)',
-                      color: active === service.id ? '#FF5A1A' : 'white',
-                      transition: 'color 0.3s ease',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {service.name}
-                  </p>
+                {/* Service label */}
+                <div
+                  style={{ position: 'absolute', bottom: '18px', left: '12px' }}
+                >
+                  <p className="fan-card-label">{service}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      <div className="w-full h-px bg-black/20" />
     </section>
   )
 }
