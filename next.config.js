@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'admin.bookarhday.com' }],
+        destination: 'https://bookarhday.com/admin/:path*',
+        permanent: false,
+      },
+    ]
+  },
   images: {
     remotePatterns: [
       {

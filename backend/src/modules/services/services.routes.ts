@@ -3,7 +3,7 @@ import slugify from 'slugify'
 import { Router, Request, Response } from 'express'
 import { prisma } from '../../config/database'
 import { cache, CACHE_KEYS } from '../../config/redis'
-import { authenticate, requireAdmin } from '../../middleware/auth.middleware'
+import { authenticate, requireAdmin, optionalAuth } from '../../middleware/auth.middleware'
 import { validate } from '../../middleware/validate.middleware'
 import { sendSuccess, sendCreated, sendNoContent } from '../../shared/utils/response'
 import { NotFoundError } from '../../shared/errors/AppError'
@@ -20,7 +20,7 @@ const serviceSchema = z.object({
 
 export const servicesRouter = Router()
 
-servicesRouter.get('/', async (req, res) => {
+servicesRouter.get('/', optionalAuth, async (req, res) => {
   const cached = await cache.get(CACHE_KEYS.services)
   if (cached) { sendSuccess(res, cached); return }
 

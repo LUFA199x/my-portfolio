@@ -120,3 +120,10 @@ subscribersRouter.get('/stats', authenticate, requireAdmin, async (_req, res) =>
   const stats = await subscribersService.getStats()
   sendSuccess(res, stats)
 })
+
+subscribersRouter.delete('/:id', authenticate, requireAdmin, async (req, res) => {
+  const subscriber = await prisma.subscriber.findUnique({ where: { id: req.params.id } })
+  if (!subscriber) throw new NotFoundError('Subscriber')
+  await prisma.subscriber.delete({ where: { id: req.params.id } })
+  sendNoContent(res)
+})

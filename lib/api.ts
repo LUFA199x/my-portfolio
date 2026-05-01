@@ -16,13 +16,15 @@ export interface ApiResponse<T = unknown> {
 }
 
 async function apiFetch<T>(path: string, init: RequestInit = {}, token?: string): Promise<ApiResponse<T>> {
+  const isFormData = init.body instanceof FormData
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...(init.headers as Record<string, string> | undefined),
   }
   try {
     const res = await fetch(`${BASE}${path}`, { ...init, headers })
+    if (res.status === 204) return { success: true }
     return res.json() as Promise<ApiResponse<T>>
   } catch {
     return { success: false, error: { code: 'NETWORK_ERROR', message: 'Network error' } }
@@ -38,6 +40,8 @@ export const api = {
     apiFetch<T>(path, { method: 'PATCH', body: JSON.stringify(body) }, token),
   del: <T>(path: string, token?: string) =>
     apiFetch<T>(path, { method: 'DELETE' }, token),
+  upload: <T>(path: string, formData: FormData, token?: string) =>
+    apiFetch<T>(path, { method: 'POST', body: formData }, token),
 }
 
 // ─── Auth helpers (localStorage — admin only) ───────────────────────────────

@@ -409,6 +409,25 @@ body {
   padding-bottom: 0.18em;
 }
 
+/* ==================== ADMIN LAYOUT ==================== */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Desktop: static sidebar visible, mobile elements hidden */
+.admin-sidebar-static  { display: flex; }
+.admin-sidebar-desktop { display: none !important; }
+.admin-sidebar-mobile  { display: block; }
+.admin-topbar          { display: none !important; }
+.admin-main            { padding: 36px 40px; }
+
+@media (max-width: 768px) {
+  .admin-sidebar-static { display: none; }
+  .admin-topbar         { display: flex !important; }
+  .admin-main           { padding: 24px 20px; }
+}
+
 /* ==================== PREFERS-REDUCED-MOTION ==================== */
 
 @media (prefers-reduced-motion: reduce) {

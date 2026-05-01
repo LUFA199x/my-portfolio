@@ -17,6 +17,8 @@ import { testimonialsRouter } from './modules/testimonials/testimonials.routes'
 import { servicesRouter } from './modules/services/services.routes'
 import { subscribersRouter } from './modules/subscribers/subscribers.routes'
 import { uploadsRouter } from './modules/uploads/uploads.routes'
+import { settingsRouter } from './modules/settings/settings.routes'
+import { usersRouter } from './modules/users/users.routes'
 
 const app = express()
 
@@ -88,6 +90,8 @@ app.use(`${API}/testimonials`, testimonialsRouter)
 app.use(`${API}/services`, servicesRouter)
 app.use(`${API}/subscribers`, subscribersRouter)
 app.use(`${API}/uploads`, uploadsRouter)
+app.use(`${API}/settings`, settingsRouter)
+app.use(`${API}/users`, usersRouter)
 
 // ─────────────────────────────────────────────────────────
 // Error Handling (must be last)

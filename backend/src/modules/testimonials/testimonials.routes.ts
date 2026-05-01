@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { Router, Request, Response } from 'express'
 import { prisma } from '../../config/database'
 import { cache, CACHE_KEYS } from '../../config/redis'
-import { authenticate, requireAdmin } from '../../middleware/auth.middleware'
+import { authenticate, requireAdmin, optionalAuth } from '../../middleware/auth.middleware'
 import { strictLimiter } from '../../middleware/rateLimit.middleware'
 import { validate } from '../../middleware/validate.middleware'
 import { sendSuccess, sendCreated, sendNoContent } from '../../shared/utils/response'
@@ -109,7 +109,7 @@ const testimonialsService = new TestimonialsService()
 // ─────────────────────────────────────────────────────────
 export const testimonialsRouter = Router()
 
-testimonialsRouter.get('/', async (req, res) => {
+testimonialsRouter.get('/', optionalAuth, async (req, res) => {
   const isAdmin = !!req.user
   const list = await testimonialsService.findAll(!isAdmin)
   sendSuccess(res, list)
