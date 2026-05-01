@@ -22,6 +22,9 @@ import { usersRouter } from './modules/users/users.routes'
 
 const app = express()
 
+// Trust Railway / Vercel reverse proxy so rate-limit and IP detection work correctly
+app.set('trust proxy', 1)
+
 // ─────────────────────────────────────────────────────────
 // Security Middleware
 // ─────────────────────────────────────────────────────────
