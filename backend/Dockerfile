@@ -3,6 +3,8 @@
 # ─────────────────────────────────────────────
 FROM node:20-alpine AS builder
 
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 # Copy package files
@@ -26,6 +28,8 @@ RUN npm run build
 # Stage 2: Production image
 # ─────────────────────────────────────────────
 FROM node:20-alpine AS production
+
+RUN apk add --no-cache openssl
 
 # Security: run as non-root
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
