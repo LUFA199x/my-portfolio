@@ -419,12 +419,13 @@ body {
 .admin-sidebar-static  { display: flex; }
 .admin-sidebar-desktop { display: none !important; }
 .admin-sidebar-mobile  { display: block; }
-.admin-topbar          { display: none !important; }
+.admin-menu-btn        { display: none !important; }
 .admin-main            { padding: 36px 40px; }
 
 @media (max-width: 768px) {
   .admin-sidebar-static { display: none; }
-  .admin-topbar         { display: flex !important; }
+  .admin-menu-btn       { display: flex !important; }
+  .admin-user-meta      { display: none; }
   .admin-main           { padding: 24px 20px; }
 }
 

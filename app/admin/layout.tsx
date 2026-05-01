@@ -6,6 +6,22 @@ import { authStorage, api } from '@/lib/api'
 import type { AdminUser } from '@/lib/admin-types'
 import { AdminUserContext, ToastProvider } from './_components'
 
+// ─── Page title map ───────────────────────────────────────────────────────────
+
+function getPageTitle(pathname: string): string {
+  if (pathname === '/admin') return 'Dashboard'
+  if (pathname === '/admin/projects/new') return 'New Project'
+  if (pathname.startsWith('/admin/projects') && pathname.endsWith('/edit')) return 'Edit Project'
+  if (pathname.startsWith('/admin/projects')) return 'Projects'
+  if (pathname.startsWith('/admin/testimonials')) return 'Testimonials'
+  if (pathname.startsWith('/admin/services')) return 'Services'
+  if (pathname.startsWith('/admin/inquiries')) return 'Inquiries'
+  if (pathname.startsWith('/admin/subscribers')) return 'Subscribers'
+  if (pathname.startsWith('/admin/settings')) return 'Settings'
+  if (pathname.startsWith('/admin/users')) return 'Users'
+  return 'Admin'
+}
+
 // ─── SVG Icons ────────────────────────────────────────────────────────────────
 
 const Icons = {
@@ -339,16 +355,55 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           {/* Main content */}
           <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-            {/* Mobile topbar */}
-            <div className="admin-topbar" style={{ display: 'none', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #181818', background: '#0d0d0d' }}>
-              <button
-                onClick={() => setSidebarOpen(true)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.7)', padding: 4 }}
-              >
-                <Icons.Menu />
-              </button>
-              <span style={{ fontFamily: 'var(--font-josefin)', fontSize: 14, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'white' }}>ARHDAY</span>
-              <div style={{ width: 28 }} />
+            {/* Top header bar — always visible */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0 28px',
+              height: 56,
+              borderBottom: '1px solid #181818',
+              background: '#0d0d0d',
+              flexShrink: 0,
+              position: 'sticky',
+              top: 0,
+              zIndex: 10,
+            }}>
+              {/* Left: hamburger (mobile) + page title */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="admin-menu-btn"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.6)', padding: 4, display: 'none' }}
+                >
+                  <Icons.Menu />
+                </button>
+                <h2 style={{ fontSize: 15, fontWeight: 600, color: 'white', margin: 0, letterSpacing: '-0.01em' }}>
+                  {getPageTitle(pathname)}
+                </h2>
+              </div>
+
+              {/* Right: user chip */}
+              {user && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div className="admin-user-meta" style={{ textAlign: 'right' }}>
+                    <p style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.2 }}>
+                      {user.name || user.email}
+                    </p>
+                    <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: 0, letterSpacing: '0.04em' }}>
+                      {user.role.replace('_', ' ')}
+                    </p>
+                  </div>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: '50%',
+                    background: 'rgba(232,76,13,0.15)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 13, fontWeight: 600, color: '#E84C0D', flexShrink: 0,
+                  }}>
+                    {user.name?.[0]?.toUpperCase() ?? user.email[0].toUpperCase()}
+                  </div>
+                </div>
+              )}
             </div>
 
             <main style={{ flex: 1, padding: '36px 40px', maxWidth: 1280, width: '100%' }} className="admin-main">
