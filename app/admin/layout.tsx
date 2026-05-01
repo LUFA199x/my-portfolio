@@ -130,10 +130,10 @@ function Sidebar({ user, pathname, onLogout, onClose }: {
       <div style={{ padding: '4px 20px 20px', borderBottom: '1px solid #181818' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h1 style={{ fontFamily: 'var(--font-playfair)', fontStyle: 'italic', fontSize: 18, fontWeight: 700, color: 'white', margin: 0, lineHeight: 1.2 }}>
+            <h1 style={{ fontFamily: 'var(--font-josefin)', fontSize: 14, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'white', margin: 0, lineHeight: 1 }}>
               ARHDAY
             </h1>
-            <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.28)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: '3px 0 0' }}>
+            <p style={{ fontFamily: 'var(--font-josefin)', fontSize: 9, fontWeight: 400, color: 'rgba(255,255,255,0.28)', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '5px 0 0' }}>
               Admin Portal
             </p>
           </div>
@@ -347,7 +347,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               >
                 <Icons.Menu />
               </button>
-              <span style={{ fontFamily: 'var(--font-playfair)', fontStyle: 'italic', fontSize: 16, fontWeight: 700, color: 'white' }}>ARHDAY</span>
+              <span style={{ fontFamily: 'var(--font-josefin)', fontSize: 14, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'white' }}>ARHDAY</span>
               <div style={{ width: 28 }} />
             </div>
 
