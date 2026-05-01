@@ -4,9 +4,8 @@ import path from 'path'
 
 const { combine, timestamp, printf, colorize, errors, json } = winston.format
 
-const BACKEND_ROOT = path.resolve(__dirname, '../../../../')
 const LOG_DIR = process.env.LOG_DIR || 'logs'
-const RESOLVED_LOG_DIR = path.isAbsolute(LOG_DIR) ? LOG_DIR : path.join(BACKEND_ROOT, LOG_DIR)
+const RESOLVED_LOG_DIR = path.isAbsolute(LOG_DIR) ? LOG_DIR : path.join(process.cwd(), LOG_DIR)
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 const IS_PROD = process.env.NODE_ENV === 'production'
 
