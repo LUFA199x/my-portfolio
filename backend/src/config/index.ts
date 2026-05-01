@@ -24,8 +24,8 @@ const envSchema = z.object({
 
   ALLOWED_ORIGINS: z.string().default('http://localhost:3000'),
 
-  SUPABASE_URL: z.string().url('SUPABASE_URL must be a valid URL'),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY is required'),
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_STORAGE_BUCKET: z.string().default('arhday'),
   SUPABASE_STORAGE_FOLDER: z.string().default('uploads'),
 

@@ -1,9 +1,16 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { randomBytes } from 'crypto'
 import { config } from '../../config'
 import { AppError } from '../errors/AppError'
 
-const supabase = createClient(config.SUPABASE_URL, config.SUPABASE_SERVICE_ROLE_KEY)
+let _supabase: SupabaseClient | null = null
+function getSupabase(): SupabaseClient {
+  if (!config.SUPABASE_URL || !config.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new AppError('Supabase is not configured — set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY', 503)
+  }
+  if (!_supabase) _supabase = createClient(config.SUPABASE_URL, config.SUPABASE_SERVICE_ROLE_KEY)
+  return _supabase
+}
 
 export interface UploadResult {
   url: string
@@ -28,6 +35,7 @@ export async function uploadImageBuffer(
   const name = options.filename ?? randomBytes(16).toString('hex')
   const storagePath = `${folder}/${name}.${ext}`
 
+  const supabase = getSupabase()
   const { error } = await supabase.storage
     .from(config.SUPABASE_STORAGE_BUCKET)
     .upload(storagePath, buffer, { contentType: mimetype, upsert: false })
@@ -53,7 +61,7 @@ export async function uploadImageBuffer(
 // Delete image by storage path
 // ─────────────────────────────────────────────────────────
 export async function deleteImage(publicId: string): Promise<void> {
-  const { error } = await supabase.storage
+  const { error } = await getSupabase().storage
     .from(config.SUPABASE_STORAGE_BUCKET)
     .remove([publicId])
   if (error) throw new AppError(`Image deletion failed: ${error.message}`, 500)
@@ -63,7 +71,7 @@ export async function deleteImage(publicId: string): Promise<void> {
 // Get public URL for a stored path
 // ─────────────────────────────────────────────────────────
 export function getOptimisedUrl(publicId: string): string {
-  const { data } = supabase.storage
+  const { data } = getSupabase().storage
     .from(config.SUPABASE_STORAGE_BUCKET)
     .getPublicUrl(publicId)
   return data.publicUrl
