@@ -11,3 +11,6 @@ backend/.env.*
 # local build output
 .next/
 backend/dist/
+.vercel
+.claude/
+tsconfig.tsbuildinfo
